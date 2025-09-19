@@ -4,12 +4,11 @@
   "description": "��#\u0000 \u0000C\u0000h\u0000a\u0000t\u0000-\u0000A\u0000p\u0000p\u0000l\u0000i\u0000c\u0000a\u0000t\u0000i\u0000o\u0000n\u0000\r\u0000 \u0000",
   "main": "index.js",
   "engines": {
-    "node":">=20.0.0"
+    "node": ">=20.0.0"
   },
   "scripts": {
-   
     "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
-    "start":"npm run start --prefix backend"
+    "start": "npm run start --prefix backend"
   },
   "repository": {
     "type": "git",
@@ -21,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/Suvassingh/Chat-Application/issues"
   },
-  "homepage": "https://github.com/Suvassingh/Chat-Application#readme"
+  "homepage": "https://github.com/Suvassingh/Chat-Application#readme",
+  "dependencies": {
+   
+  }
 }
