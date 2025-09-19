@@ -1,10 +1,9 @@
 import express from "express";
 import User from "../models/User.js";
-import bcrypt from "bcryptjs";
 import { generateToken } from "../lib/utils.js";
 import { sendWelcomeEmail } from "../emails/emailHandler.js";
 import { ENV } from "../lib/env.js";
-
+import bcrypt from "bcryptjs"
 
 export const signup = async (req, res) => {
   const { fullname, email, password } = req.body;
@@ -17,11 +16,7 @@ export const signup = async (req, res) => {
         .status(400)
         .json({ mesage: "Password should be of six character" });
     }
-    // check for valid email :regex
-    // const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    // if (!emailRegex.test(email)) {
-    //   return res.status(400).json({ mesage: "Invalid email format" });
-    // }
+    
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ message: "Invalid email format" });
@@ -47,17 +42,15 @@ export const signup = async (req, res) => {
         profiePic: newUser.profilePic,
       });
       // welcome email sending
-        try {
-          await sendWelcomeEmail(savedUser.email,savedUser.fullname,ENV.CLIENT_URL);
-          
-        } catch (error) {
-          
-          console.error("failed to send welcome email:",error)
-        }
-
-
-
-    
+      try {
+        await sendWelcomeEmail(
+          savedUser.email,
+          savedUser.fullname,
+          ENV.CLIENT_URL
+        );
+      } catch (error) {
+        console.error("failed to send welcome email:", error);
+      }
     } else {
       res.status(400).json({
         message: "invalid user data",
@@ -67,4 +60,32 @@ export const signup = async (req, res) => {
     console.log("error in signup controller ", error);
     res.status(500).json({ message: "internal server error " });
   }
+};
+
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: "Invalid credentials" }); //never tell the client which one is incorrect: password or email
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect)
+      return res.status(400).json({ message: "Invalid credentials" }); //never tell the client which one is incorrect: password or email
+
+    generateToken(user._id, res);
+    res.status(200).json({
+      _id: user._id,
+      fullname: user.fullname,
+      email: user.email,
+      profiePic: user.profilePic,
+    });
+  } catch (error) {
+    console.error("Error in login controller:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const logout = async (_, res) => {
+  res.cookie("jwt","",{maxAge:0})
+  res.status(200).json({message:"Logged out successfully"})
+
 };
