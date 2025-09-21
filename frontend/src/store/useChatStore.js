@@ -12,18 +12,18 @@ import toast from "react-hot-toast";
    selectedUser: null,
    isUsersLoading: false,
    isMessagesLoading: false,
-   isSoundEnabled: localStorage.getItem("isSoundEnabled") === true,
+   isSoundEnabled: JSON.parse(localStorage.getItem("isSoundEnabled")) === true,
 
    toggleSound: () => {
      localStorage.setItem("isSoundEnabled", !get().isSoundEnabled);
      set({ isSoundEnabled: !get().isSoundEnabled });
    },
-   setActiveTab: (tab) => set({ ativeTab: tab }),
+   setActiveTab: (tab) => set({ activeTab: tab }),
    setSelectedUser: (selectedUser) => set({ selectedUser }),
    getAllContacts:async()=>{
        set({ isUsersLoading: true });
        try {
-         const res = await axiosInstance.get("/messages/contacts");
+         const res = await axiosInstance.get("/message/contacts");
          set({ allContacts: res.data });
        } catch (error) {
          toast.error(error.response.data.message);
@@ -34,7 +34,7 @@ import toast from "react-hot-toast";
    getMyChatPartner:async()=>{
       set({ isUsersLoading: true });
       try {
-        const res = await axiosInstance.get("/messages/chats");
+        const res = await axiosInstance.get("/message/chats");
         set({ chats: res.data });
       } catch (error) {
         toast.error(error.response.data.message);
