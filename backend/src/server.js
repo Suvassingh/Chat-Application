@@ -6,7 +6,9 @@ import path from "path";
 import { connectDB } from "./lib/db.js";
 import { ENV } from "./lib/env.js";
 import cors from "cors";
-const app = express();
+import {app,server} from "./lib/socket.js"
+
+
 const __dirname = path.resolve();
 
 const PORT = ENV.PORT || 3000;
@@ -32,7 +34,14 @@ if (ENV.NODE_ENV === "production") {
     res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
   });
 }
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`server is running at port ${PORT}`);
   connectDB();
 });
+
+
+
+
+
+
+
