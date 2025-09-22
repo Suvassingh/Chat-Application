@@ -174,7 +174,7 @@ export const useChatStore = create((set, get) => ({
       const currentMessages = get().messages
       set({messages:[...currentMessages,newMessage]});
       if(isSoundEnabled){
-        const notificationSound = new Audio("/sound/notification.mp3");
+        const notificationSound = new Audio("/sounds/notification.mp3");
         notificationSound.currentTime = 0;
         notificationSound.play().catch((e)=>console.log("Audio play failed:",e))
       }
